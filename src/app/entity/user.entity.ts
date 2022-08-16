@@ -8,4 +8,10 @@ export class User extends CustomBaseEntity {
 
   @Column({ nullable: false })
   email: string;
+
+  constructor(user?: Partial<User>) {
+    super();
+    this.name = user?.name;
+    this.email = user?.email;
+  }
 }
