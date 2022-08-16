@@ -27,7 +27,7 @@ export class UserService {
   }
 
   async findOneOrFail(id: string): Promise<User> {
-    const user = this.findOne({ id });
+    const user = await this.findOne({ id });
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
@@ -37,15 +37,14 @@ export class UserService {
   }
 
   async save(user: SaveUserDto): Promise<User> {
-    const newUser = this.userRepository.create(user);
-
     const userExist = await this.findOne({ email: user.email });
-
+    
     if (userExist) {
       throw new BadRequestException('Usuário já cadastrado');
     }
+    
+    const newUser = this.userRepository.create(user);
 
-    newUser.id = uuid.generate();
     return await this.userRepository.save(newUser);
   }
 
