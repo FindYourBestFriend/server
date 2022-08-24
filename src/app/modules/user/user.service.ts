@@ -7,7 +7,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { SaveUserDto, UpdateUserDto } from '@modules/user/user.dto';
-import { uuid } from '@app/utils/uuid';
 
 @Injectable()
 export class UserService {
@@ -38,14 +37,19 @@ export class UserService {
 
   async save(user: SaveUserDto): Promise<User> {
     const userExist = await this.findOne({ email: user.email });
-    
+
     if (userExist) {
       throw new BadRequestException('Usuário já cadastrado');
     }
-    
+
     const newUser = this.userRepository.create(user);
 
-    return await this.userRepository.save(newUser);
+    const savedUser = await this.userRepository.save(newUser);
+    return await this.userRepository.findOne({
+      where: {
+        id: savedUser.id,
+      },
+    });
   }
 
   async update(id: string, user: UpdateUserDto): Promise<User> {

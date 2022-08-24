@@ -86,7 +86,6 @@ describe('UserController', () => {
   describe('update', () => {
     it('should update a user successfully', async () => {
       const body: UpdateUserDto = {
-        email: 'gabrielback@gmail.com',
         name: 'Gabriel Back',
       };
       const result = await userController.update('1', body);

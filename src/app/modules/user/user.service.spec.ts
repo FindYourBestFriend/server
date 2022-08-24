@@ -122,7 +122,6 @@ describe('UserService', () => {
       jest.spyOn(userRepository, 'save').mockResolvedValueOnce(updatedUser);
 
       const data: UpdateUserDto = {
-        email: 'gabrielback@gmail.com',
         name: 'Gabriel Back',
       };
       const result = await userService.update('1', data);
@@ -137,7 +136,6 @@ describe('UserService', () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
 
       const data: UpdateUserDto = {
-        email: 'gabrielback@gmail.com',
         name: 'Gabriel Back',
       };
 

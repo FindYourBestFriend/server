@@ -5,7 +5,7 @@ class UUID {
     return v4();
   }
 
-  version(uuid: string): boolean {
+  isValid(uuid: string): boolean {
     return validate(uuid) && version(uuid) === 4;
   }
 }
