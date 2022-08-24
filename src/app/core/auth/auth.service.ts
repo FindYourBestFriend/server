@@ -82,7 +82,6 @@ export class AuthService {
     if (!user) return null;
 
     const isPasswordValid = crypto.compare(password, user.password);
-    console.log(isPasswordValid);
 
     if (!isPasswordValid) return null;
 

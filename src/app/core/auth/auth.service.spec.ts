@@ -1,5 +1,8 @@
+import { User } from '@app/entity/user.entity';
 import { BadRequestException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
@@ -7,7 +10,14 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
+      providers: [
+        AuthService,
+        {
+          provide: getRepositoryToken(User),
+          useValue: {},
+        },
+        JwtService,
+      ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
