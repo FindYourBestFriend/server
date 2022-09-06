@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
-import { EmailController } from './email.controller';
 import { EmailService } from './email.service';
 import { join } from 'path';
 
