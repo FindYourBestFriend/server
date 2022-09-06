@@ -5,6 +5,7 @@ import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@app/core/auth/auth.module';
 import { OngModule } from './app/modules/ong/ong.module';
 import { EmailModule } from './app/modules/email/email.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { EmailModule } from './app/modules/email/email.module';
     OngModule,
     EmailModule,
   ],
-  providers: [],
+  controllers: [AppController],
 })
 export class AppModule {}
