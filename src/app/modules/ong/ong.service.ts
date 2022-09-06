@@ -38,7 +38,7 @@ export class OngService {
     return ong;
   }
 
-  async addUser(ongId: string, userId: string) {
+  async addUser(ongId: string, userId: string): Promise<void> {
     const user = await this.userService.findOneOrFail(userId);
     const ong = await this.ongRepository.findOne({
       where: {
