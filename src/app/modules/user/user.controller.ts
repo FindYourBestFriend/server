@@ -6,12 +6,9 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseUUIDPipe,
   Post,
   Put,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { SaveUserDto, UpdateUserDto } from '@modules/user/user.dto';
 import { UserService } from '@modules/user/user.service';
@@ -30,7 +27,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<User> {
+  async findOne(@Param('id', ValidationUUIDPipe) id: string): Promise<User> {
     return await this.userService.findOneOrFail(id);
   }
 

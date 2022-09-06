@@ -4,6 +4,7 @@ import {
   UpdateDateColumn,
   BaseEntity,
   BeforeInsert,
+  DeleteDateColumn,
 } from 'typeorm';
 import { IsOptional, IsUUID } from 'class-validator';
 import { uuid } from '@app/utils/uuid';
@@ -19,6 +20,9 @@ export abstract class CustomBaseEntity extends BaseEntity {
 
   @UpdateDateColumn({ type: 'timestamp', nullable: true })
   updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  deletedAt: Date;
 
   @BeforeInsert()
   generateId(): void {

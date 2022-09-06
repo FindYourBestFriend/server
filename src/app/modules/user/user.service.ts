@@ -7,12 +7,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { SaveUserDto, UpdateUserDto } from '@modules/user/user.dto';
+import { EmailService, EmailTemplate } from '../email/email.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly emailService: EmailService,
   ) {}
 
   async find(): Promise<User[]> {
@@ -44,12 +46,21 @@ export class UserService {
 
     const newUser = this.userRepository.create(user);
 
-    const savedUser = await this.userRepository.save(newUser);
-    return await this.userRepository.findOne({
-      where: {
-        id: savedUser.id,
-      },
+    // const savedUser = await this.userRepository.save(newUser);
+
+    this.emailService.send(newUser.email, EmailTemplate.Invite, {
+      user_name: newUser.name,
+      ong_name: 'Patudos da Rua',
+      link: 'http://test.com',
     });
+
+    // criar token para validar novo usuário criado por dentro da plataforma
+    return newUser;
+    // return await this.userRepository.findOne({
+    //   where: {
+    //     id: savedUser.id,
+    //   },
+    // });
   }
 
   async update(id: string, user: UpdateUserDto): Promise<User> {
@@ -62,6 +73,6 @@ export class UserService {
 
   async deleteById(id: string): Promise<void> {
     await this.findOneOrFail(id);
-    await this.userRepository.delete({ id });
+    await this.userRepository.softDelete({ id });
   }
 }

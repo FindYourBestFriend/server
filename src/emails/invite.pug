@@ -1,0 +1,33 @@
+doctype html
+html
+    head
+      meta(charset='utf-8')
+      meta(name='viewport' content='width=device-width')
+      meta(http-equiv='X-UA-Compatible' content='IE=edge')
+      meta(name='x-apple-disable-message-reformatting')
+      link(rel='preconnect' href='https://fonts.gstatic.com')
+      link(href='https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,300;1,400&display=swap' rel='stylesheet')
+
+      style.
+        html,
+          body {
+            font-family: Arial, Helvetica, sans-serif !important;
+            color: #696969 !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+            background: #f1f1f1;
+          }
+
+          * {
+            -ms-text-size-adjust: 100% !important;
+            -webkit-text-size-adjust: 100% !important;
+          }
+
+    body
+      div
+        h2 Olá, #{user_name}
+        p Você foi convidado para estar acessando a Find Your Friend. Você foi convidado pela ONG #{ong_name}
+        p Para acessar sua conta basta clicar no botão abaixo
+        a(href=`${link}`, style='background-color:#e56537;border:1px solid #333333;border-color:#e56537;border-radius:6px;border-width:1px;color:#ffffff;display:inline-block;font-family:arial,helvetica,sans-serif;font-size:16px;font-weight:normal;letter-spacing:0px;line-height:16px;padding:12px 18px 12px 18px;text-align:center;text-decoration:none', target='_blank') Acessar Conta
+

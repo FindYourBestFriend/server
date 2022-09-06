@@ -1,7 +1,22 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { Entity, Column, BeforeInsert } from 'typeorm';
-import { CustomBaseEntity } from './base';
+import {
+  Entity,
+  Column,
+  BeforeInsert,
+  ManyToMany,
+  OneToMany,
+  Index,
+} from 'typeorm';
+import { CustomBaseEntity } from '@entity/base';
 import { crypto } from '@app/utils/crypto';
+import { ONG } from '@entity/ongs.entity';
+import { UserToken } from '@entity/user-token.entity';
+
+export enum UserStatus {
+  Invited = 'invited', // Convidado
+  Confirmed = 'confirmed', // Confirmedo
+  Blocked = 'blocked', // Bloqueado
+}
 
 @Entity()
 export class User extends CustomBaseEntity {
@@ -16,8 +31,21 @@ export class User extends CustomBaseEntity {
   @IsEmail()
   email: string;
 
+  @Index()
+  @Column('enum', {
+    default: UserStatus.Invited,
+    enum: UserStatus,
+  })
+  status: UserStatus;
+
   @Column({ select: false, nullable: true })
   password: string;
+
+  @OneToMany(() => UserToken, (token) => token.user)
+  tokens: UserToken[];
+
+  @ManyToMany(() => ONG, (ong) => ong.users)
+  ongs: ONG[];
 
   @BeforeInsert()
   hashPassword(): void {
