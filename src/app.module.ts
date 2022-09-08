@@ -6,6 +6,7 @@ import { AuthModule } from '@app/core/auth/auth.module';
 import { OngModule } from './app/modules/ong/ong.module';
 import { EmailModule } from './app/modules/email/email.module';
 import { AppController } from './app.controller';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AppController } from './app.controller';
       synchronize: process.env.NODE_ENV === 'development',
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
     }),
+    EventEmitterModule.forRoot(),
     UserModule,
     AuthModule,
     OngModule,

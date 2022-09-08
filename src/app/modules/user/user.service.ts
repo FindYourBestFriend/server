@@ -7,14 +7,15 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { SaveUserDto, UpdateUserDto } from '@modules/user/user.dto';
-import { EmailService, EmailTemplate } from '../email/email.service';
+import { EmailTemplate } from '../email/email.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly emailService: EmailService,
+    private readonly eventEmmiter: EventEmitter2,
   ) {}
 
   async find(): Promise<User[]> {
@@ -37,30 +38,26 @@ export class UserService {
     return user;
   }
 
-  async save(user: SaveUserDto): Promise<User> {
+  async save(user: User): Promise<User> {
     const userExist = await this.findOne({ email: user.email });
 
     if (userExist) {
       throw new BadRequestException('Usuário já cadastrado');
     }
 
-    const newUser = this.userRepository.create(user);
+    await this.userRepository.save(this.userRepository.create(user));
 
-    // const savedUser = await this.userRepository.save(newUser);
-
-    this.emailService.send(newUser.email, EmailTemplate.Invite, {
-      user_name: newUser.name,
+    this.eventEmmiter.emit('email.send', user.email, EmailTemplate.Invite, {
+      user_name: user.name,
       ong_name: 'Patudos da Rua',
       link: 'http://test.com',
     });
 
-    // criar token para validar novo usuário criado por dentro da plataforma
-    return newUser;
-    // return await this.userRepository.findOne({
-    //   where: {
-    //     id: savedUser.id,
-    //   },
-    // });
+    return await this.userRepository.findOne({
+      where: {
+        id: user.id,
+      },
+    });
   }
 
   async update(id: string, user: UpdateUserDto): Promise<User> {

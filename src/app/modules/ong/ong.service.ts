@@ -1,14 +1,21 @@
 import { ONG } from '@app/entity/ongs.entity';
-import { User } from '@app/entity/user.entity';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { UserService } from '@app/modules/user/user.service';
-import { SaveOngDto, UpdateOngDto } from './ong.dto';
+import {
+  SaveOngDto,
+  SaveUserOngDto,
+  UpdateOngDto,
+} from '@app/modules/ong/ong.dto';
+import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
+import { User } from '@app/entity/user.entity';
 
 @Injectable()
 export class OngService {
@@ -16,6 +23,8 @@ export class OngService {
     @InjectRepository(ONG)
     private readonly ongRepository: Repository<ONG>,
     private readonly userService: UserService,
+    @Inject(REQUEST)
+    private readonly request: Request,
   ) {}
 
   async find(): Promise<ONG[]> {
@@ -38,8 +47,16 @@ export class OngService {
     return ong;
   }
 
-  async addUser(ongId: string, userId: string): Promise<void> {
-    const user = await this.userService.findOneOrFail(userId);
+  async addUser(user: User): Promise<void> {
+    const ongId = this.request.headers['org-id'] as string;
+    const haveUser = await this.userService.findOne({ email: user.email });
+
+    if (!haveUser) {
+      user = await this.userService.save(user);
+    } else {
+      user = haveUser;
+    }
+
     const ong = await this.ongRepository.findOne({
       where: {
         id: ongId,
@@ -87,6 +104,18 @@ export class OngService {
     ong.users = ong.users.filter((ongUser) => ongUser.id !== user.id);
 
     await this.ongRepository.save(ong);
+  }
+
+  async findUsers() {
+    const ongId = this.request.headers['ong-id'] as string;
+    const ong = await this.ongRepository.findOne({
+      where: {
+        id: ongId,
+      },
+      relations: ['users'],
+    });
+
+    return ong.users;
   }
 
   async save(ong: SaveOngDto): Promise<ONG> {

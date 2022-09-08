@@ -21,33 +21,33 @@ import { AuthGuard } from '@nestjs/passport';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  async findAll(): Promise<User[]> {
-    return await this.userService.find();
-  }
+  // @Get()
+  // async findAll() {
+  //   return await this.userService.find();
+  // }
 
-  @Get(':id')
-  async findOne(@Param('id', ValidationUUIDPipe) id: string): Promise<User> {
-    return await this.userService.findOneOrFail(id);
-  }
+  // @Get(':id')
+  // async findOne(@Param('id', ValidationUUIDPipe) id: string): Promise<User> {
+  //   return await this.userService.findOneOrFail(id);
+  // }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async save(@Body() body: SaveUserDto): Promise<User> {
-    return await this.userService.save(body);
+    return await this.userService.save(new User(body));
   }
 
-  @Put(':id')
-  async update(
-    @Param('id', ValidationUUIDPipe) id: string,
-    @Body() body: UpdateUserDto,
-  ): Promise<User> {
-    return await this.userService.update(id, body);
-  }
+  // @Put(':id')
+  // async update(
+  //   @Param('id', ValidationUUIDPipe) id: string,
+  //   @Body() body: UpdateUserDto,
+  // ): Promise<User> {
+  //   return await this.userService.update(id, body);
+  // }
 
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id', ValidationUUIDPipe) id: string): Promise<void> {
-    await this.userService.deleteById(id);
-  }
+  // @Delete(':id')
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  // async delete(@Param('id', ValidationUUIDPipe) id: string): Promise<void> {
+  //   await this.userService.deleteById(id);
+  // }
 }

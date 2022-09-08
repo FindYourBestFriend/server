@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsEmail,
-  IsUUID,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail } from 'class-validator';
 
 export class SaveOngDto {
   @IsString()
@@ -13,3 +7,14 @@ export class SaveOngDto {
 }
 
 export class UpdateOngDto extends SaveOngDto {}
+
+export class SaveUserOngDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+}

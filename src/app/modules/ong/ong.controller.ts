@@ -10,21 +10,36 @@ import {
   Param,
   Post,
   Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
-import { SaveOngDto, UpdateOngDto } from '@app/modules/ong/ong.dto';
+import {
+  SaveOngDto,
+  SaveUserOngDto,
+  UpdateOngDto,
+} from '@app/modules/ong/ong.dto';
 import { OngService } from '@app/modules/ong/ong.service';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from '@app/entity/user.entity';
 
+@UseGuards(AuthGuard('ong-jwt'))
 @Controller('api/v1/ong')
 export class OngController {
   constructor(private readonly ongService: OngService) {}
   @Get()
-  async findAll() {
-    return await this.ongService.find();
+  async findAll(@Req() req) {
+    const ongId = req.headers['ong-id'];
+    return await this.ongService.findOneOrFail(ongId);
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ValidationUUIDPipe) id: string) {
-    return await this.ongService.findOneOrFail(id);
+  // @Get(':id')
+  // async findOne(@Param('id', ValidationUUIDPipe) id: string) {
+  //   return await this.ongService.findOneOrFail(id);
+  // }
+
+  @Get('/users')
+  async findUsers() {
+    return await this.ongService.findUsers();
   }
 
   @Post()
@@ -33,13 +48,10 @@ export class OngController {
     return await this.ongService.save(body);
   }
 
-  @Post(':orgId/add-user/:userId')
+  @Post('/add-user')
   @HttpCode(HttpStatus.CREATED)
-  async addUser(
-    @Param('orgId', ValidationUUIDPipe) orgId: string,
-    @Param('userId', ValidationUUIDPipe) userId: string,
-  ) {
-    return await this.ongService.addUser(orgId, userId);
+  async addUser(@Body() body: SaveUserOngDto) {
+    return await this.ongService.addUser(new User({ ...body }));
   }
 
   @Post(':orgId/remove-user/:userId')

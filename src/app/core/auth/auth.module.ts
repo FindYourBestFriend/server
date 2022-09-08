@@ -9,11 +9,14 @@ import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../../modules/user/user.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
+import { OngJwtStrategy } from './strategies/ong-jwt.strategy';
+import { ONG } from '@app/entity/ongs.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, ONG]),
     UserModule,
     PassportModule,
     JwtModule.register({
@@ -24,6 +27,12 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    RefreshJwtStrategy,
+    OngJwtStrategy,
+  ],
 })
 export class AuthModule {}

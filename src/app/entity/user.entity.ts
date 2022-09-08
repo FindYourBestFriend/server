@@ -13,6 +13,7 @@ import { ONG } from '@entity/ongs.entity';
 import { UserToken } from '@entity/user-token.entity';
 
 export enum UserStatus {
+  Created = 'created', // Criado
   Invited = 'invited', // Convidado
   Confirmed = 'confirmed', // Confirmedo
   Blocked = 'blocked', // Bloqueado
@@ -33,7 +34,7 @@ export class User extends CustomBaseEntity {
 
   @Index()
   @Column('enum', {
-    default: UserStatus.Invited,
+    default: UserStatus.Created,
     enum: UserStatus,
   })
   status: UserStatus;
@@ -58,5 +59,6 @@ export class User extends CustomBaseEntity {
     super();
     this.name = user?.name;
     this.email = user?.email;
+    this.status = user?.status;
   }
 }

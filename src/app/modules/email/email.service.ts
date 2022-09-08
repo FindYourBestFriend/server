@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+
 import { MailerService } from '@nestjs-modules/mailer';
+import { OnEvent } from '@nestjs/event-emitter';
 
 export enum EmailTemplate {
   ConfirmEmail = 'confirm-email',
@@ -14,6 +16,8 @@ enum EmailSubject {
 @Injectable()
 export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
+
+  @OnEvent('email.send')
   async send(
     to: string,
     emailTemplate: EmailTemplate,

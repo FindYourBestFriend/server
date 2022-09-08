@@ -5,6 +5,8 @@ import { SingUpDto } from './auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { crypto } from '@app/utils/crypto';
 import { JwtService } from '@nestjs/jwt';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EmailTemplate } from '@app/modules/email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -12,17 +14,22 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async login(user: User) {
-    const payload = { sub: user.id, email: user.email };
-    const token = this.jwtService.sign(payload);
-    const refresh_token = this.jwtService.sign(payload, { expiresIn: '7d' });
+    const token_payload = { sub: user.id, email: user.email };
+    const refresh_token_payload = { sub: user.id };
+    const token = this.jwtService.sign(token_payload);
+    const refresh_token = this.jwtService.sign(refresh_token_payload, {
+      privateKey: process.env.REFRESH_JWT_SECRET,
+      expiresIn: '7d',
+    });
 
-    return { token, user };
+    return { refresh_token, token, user };
   }
 
-  async singUp(body: SingUpDto): Promise<{ token: string; user: User }> {
+  async singUp(body: SingUpDto) {
     const haveUser = await this.userRepository.findOne({
       where: {
         email: body.email,
@@ -36,12 +43,33 @@ export class AuthService {
     const user = await this.userRepository.save(
       this.userRepository.create(body),
     );
-    const payload = { sub: user.id, email: user.email };
-    const token = this.jwtService.sign(payload);
+
+    this.eventEmitter.emit(
+      'email.send',
+      user.email,
+      EmailTemplate.ConfirmEmail,
+    );
 
     delete user.password;
 
-    return { token, user: user };
+    return { user };
+  }
+
+  async refreshToken(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Usuário não encontrado');
+    }
+
+    const payload = { sub: user.id, email: user.email };
+    const token = this.jwtService.sign(payload);
+
+    return { token };
   }
 
   passwordValidation(password: string): void {
