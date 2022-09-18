@@ -1,9 +1,10 @@
 import { User } from '@entity/user.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SaveUserDto, UpdateUserDto } from './user.dto';
+import { UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
 
 const userList: User[] = [
@@ -34,9 +35,10 @@ describe('UserService', () => {
             create: jest.fn().mockReturnValue(userList[0]),
             merge: jest.fn().mockReturnValue(updatedUser),
             save: jest.fn().mockResolvedValue(userList[0]),
-            delete: jest.fn().mockReturnValue(undefined),
+            softDelete: jest.fn().mockReturnValue(undefined),
           },
         },
+        EventEmitter2,
       ],
     }).compile();
 
@@ -91,10 +93,10 @@ describe('UserService', () => {
     it('should create a new user successfully', async () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
 
-      const data: SaveUserDto = {
+      const data: User = new User({
         email: 'gabriel.back@gmail.com',
         name: 'Gabriel Back',
-      };
+      });
       const result = await userService.save(data);
 
       expect(result).toEqual(userList[0]);
@@ -103,10 +105,10 @@ describe('UserService', () => {
     });
 
     it('should throw a bad request exception to an exist user', async () => {
-      const data: SaveUserDto = {
+      const data: User = new User({
         email: 'gabriel.back@gmail.com',
         name: 'Gabriel Back',
-      };
+      });
 
       try {
         await userService.save(data);
@@ -153,7 +155,7 @@ describe('UserService', () => {
       const result = await userService.deleteById('1');
 
       expect(result).toBeUndefined();
-      expect(userRepository.delete).toHaveBeenCalledTimes(1);
+      expect(userRepository.softDelete).toHaveBeenCalledTimes(1);
       expect(userRepository.findOne).toHaveBeenCalledTimes(1);
     });
   });

@@ -26,6 +26,12 @@ export class AuthService {
       expiresIn: '7d',
     });
 
+    this.eventEmitter.emit(
+      'email.send',
+      user.email,
+      EmailTemplate.ConfirmEmail,
+    );
+
     return { refresh_token, token, user };
   }
 

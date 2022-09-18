@@ -31,6 +31,16 @@ export class OngService {
     return await this.ongRepository.find();
   }
 
+  async findAllOfCurrentUser(userId: string): Promise<ONG[]> {
+    return await this.ongRepository.find({
+      where: {
+        users: {
+          id: userId,
+        },
+      },
+    });
+  }
+
   async findOne(where: FindOptionsWhere<ONG>): Promise<ONG> {
     return await this.ongRepository.findOne({
       where,
