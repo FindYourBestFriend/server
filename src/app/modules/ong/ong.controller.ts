@@ -28,8 +28,8 @@ export class OngController {
   constructor(private readonly ongService: OngService) {}
   @Get()
   async findAll(@Req() req) {
-    const ongId = req.headers['ong-id'];
-    return await this.ongService.findOneOrFail(ongId);
+    const userId = req.headers.user.id;
+    return await this.ongService.findAllOfCurrentUser(userId);
   }
 
   // @Get(':id')

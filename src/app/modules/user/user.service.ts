@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { SaveUserDto, UpdateUserDto } from '@modules/user/user.dto';
+import { UpdateUserDto } from '@modules/user/user.dto';
 import { EmailTemplate } from '../email/email.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 

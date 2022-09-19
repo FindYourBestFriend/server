@@ -1,5 +1,6 @@
 import { User } from '@app/entity/user.entity';
 import { BadRequestException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -17,6 +18,7 @@ describe('AuthService', () => {
           useValue: {},
         },
         JwtService,
+        EventEmitter2,
       ],
     }).compile();
 
