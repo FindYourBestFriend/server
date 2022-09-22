@@ -10,13 +10,12 @@ export class ONG extends CustomBaseEntity {
   @IsString()
   name: string;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.ongs)
   @JoinTable()
   users: User[];
 
   constructor(ong?: Partial<ONG>) {
     super();
     this.name = ong?.name;
-    this.users = ong?.users || [];
   }
 }
