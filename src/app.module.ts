@@ -20,6 +20,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       database: process.env.DB_DATABASE,
       synchronize: process.env.NODE_ENV === 'development',
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
+      migrations: [__dirname + '/**/migrations/*{.js,.ts}'],
     }),
     EventEmitterModule.forRoot(),
     UserModule,

@@ -17,5 +17,8 @@ npm install
 #build app
 npm run build
 
+#typeorm run migrations
+npm run typeorm:run
+
 #start our node app in the background
 pm2 reload main
