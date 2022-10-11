@@ -23,7 +23,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from '@app/entity/user.entity';
 
 @UseGuards(AuthGuard('ong-jwt'))
-@Controller('api/v1/ong')
+@Controller('v1/ong')
 export class OngController {
   constructor(private readonly ongService: OngService) {}
   @Get()
