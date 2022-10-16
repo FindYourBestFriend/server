@@ -25,6 +25,9 @@ export class EmailService {
   ) {
     const from = process.env.SMTP_FROM;
 
+    console.log(from);
+    console.log(to);
+
     await this.mailerService.sendMail({
       to,
       from,
@@ -32,6 +35,6 @@ export class EmailService {
       template: emailTemplate,
       context,
     });
-    return null;
+    return;
   }
 }

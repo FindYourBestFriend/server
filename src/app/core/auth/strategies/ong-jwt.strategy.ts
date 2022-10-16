@@ -44,6 +44,6 @@ export class OngJwtStrategy extends PassportStrategy(Strategy, 'ong-jwt') {
 
     if (!ong) throw new UnauthorizedException();
 
-    return { id: userId, ongId: ong.id };
+    return { id: userId, email: payload.email, ongId: ong.id };
   }
 }

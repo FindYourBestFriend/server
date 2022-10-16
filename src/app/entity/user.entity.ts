@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { CustomBaseEntity } from '@entity/base';
-import { crypto } from '@app/utils/crypto';
+import { kryptos } from '@app/utils/crypto';
 import { ONG } from '@entity/ongs.entity';
 import { UserToken } from '@entity/user-token.entity';
 
@@ -51,7 +51,7 @@ export class User extends CustomBaseEntity {
   @BeforeInsert()
   hashPassword(): void {
     if (this.password) {
-      this.password = crypto.encript(this.password);
+      this.password = kryptos.encrypt(this.password);
     }
   }
 

@@ -23,4 +23,9 @@ export class AuthController {
   async refreshToken(@Req() req) {
     return await this.authService.refreshToken(req.user.id);
   }
+
+  @Post('/confirm-email')
+  async confirmEmail(@Body() body: { token: string }) {
+    return await this.authService.confirmEmail(body.token);
+  }
 }

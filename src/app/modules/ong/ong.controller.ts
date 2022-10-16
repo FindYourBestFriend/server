@@ -32,11 +32,6 @@ export class OngController {
     return await this.ongService.findAllOfCurrentUser(userId);
   }
 
-  // @Get(':id')
-  // async findOne(@Param('id', ValidationUUIDPipe) id: string) {
-  //   return await this.ongService.findOneOrFail(id);
-  // }
-
   @Get('/users')
   async findUsers() {
     return await this.ongService.findUsers();

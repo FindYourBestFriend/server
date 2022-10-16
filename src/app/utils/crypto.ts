@@ -1,7 +1,7 @@
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
-export class Crypto {
-  encript(password: string): string {
+export class Kryptos {
+  encrypt(password: string): string {
     const salt = genSaltSync(10);
     return hashSync(password, salt);
   }
@@ -11,6 +11,6 @@ export class Crypto {
   }
 }
 
-const crypto = new Crypto();
+const kryptos = new Kryptos();
 
-export { crypto };
+export { kryptos };

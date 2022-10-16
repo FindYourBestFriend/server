@@ -7,6 +7,7 @@ import { OngModule } from './app/modules/ong/ong.module';
 import { EmailModule } from './app/modules/email/email.module';
 import { AppController } from './app.controller';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MyAccountModule } from './app/modules/my-account/my-account.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     AuthModule,
     OngModule,
     EmailModule,
+    MyAccountModule,
   ],
   controllers: [AppController],
 })

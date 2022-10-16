@@ -1,18 +1,22 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { User } from '@app/entity/user.entity';
+import { User, UserStatus } from '@app/entity/user.entity';
 import { SingUpDto } from './auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { crypto } from '@app/utils/crypto';
+import { kryptos } from '@app/utils/crypto';
 import { JwtService } from '@nestjs/jwt';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EmailTemplate } from '@app/modules/email/email.service';
+import * as crypto from 'crypto';
+import { UserToken, UserTokenStatus, UserTokenType } from '@app/entity/user-token.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(UserToken)
+    private readonly userTokenRepository: Repository<UserToken>,
     private readonly jwtService: JwtService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
@@ -25,12 +29,6 @@ export class AuthService {
       privateKey: process.env.REFRESH_JWT_SECRET,
       expiresIn: '7d',
     });
-
-    this.eventEmitter.emit(
-      'email.send',
-      user.email,
-      EmailTemplate.ConfirmEmail,
-    );
 
     return { refresh_token, token, user };
   }
@@ -47,13 +45,25 @@ export class AuthService {
     }
 
     const user = await this.userRepository.save(
-      this.userRepository.create(body),
+      this.userRepository.create({ ...body, status: UserStatus.Created }),
+    );
+
+    const token = crypto.randomBytes(10).toString('hex');
+
+    const userToken = new UserToken();
+    userToken.token = token;
+    userToken.user = user;
+    userToken.type = UserTokenType.EmailConfirmation;
+
+    await this.userTokenRepository.save(
+      this.userTokenRepository.create(userToken)
     );
 
     this.eventEmitter.emit(
       'email.send',
       user.email,
       EmailTemplate.ConfirmEmail,
+      { token }
     );
 
     delete user.password;
@@ -76,6 +86,36 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return { token };
+  }
+
+  async confirmEmail(token: string) {
+    const userToken = await this.userTokenRepository.findOne({
+      where: {
+        token,
+        type: UserTokenType.EmailConfirmation,
+      },
+      relations: ['user'],
+    });
+
+    if (!userToken) {
+      throw new BadRequestException('Token inválido');
+    }
+
+    const createdAt = new Date(userToken.createdAt);
+    createdAt.setDate(createdAt.getDate() + 1);
+
+    if (createdAt.getTime() < Date.now()) {
+      userToken.status = UserTokenStatus.Expired;
+      await this.userTokenRepository.save(userToken);
+      throw new BadRequestException('Token expirado');
+    }
+
+    userToken.user.status = UserStatus.Confirmed;
+
+    await this.userRepository.save(userToken.user);
+    await this.userTokenRepository.delete(userToken.id);
+
+    return userToken.user;
   }
 
   passwordValidation(password: string): void {
@@ -105,6 +145,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: {
         email,
+        status: UserStatus.Confirmed,
       },
       select: {
         id: true,
@@ -116,7 +157,7 @@ export class AuthService {
 
     if (!user) return null;
 
-    const isPasswordValid = crypto.compare(password, user.password);
+    const isPasswordValid = kryptos.compare(password, user.password);
 
     if (!isPasswordValid) return null;
 
