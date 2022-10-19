@@ -4,13 +4,13 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { OnEvent } from '@nestjs/event-emitter';
 
 export enum EmailTemplate {
-  ConfirmEmail = 'confirm-email',
-  Invite = 'invite',
+  ConfirmEmail = 'confirmation',
+  Invite = 'invitation',
 }
 
 enum EmailSubject {
-  'confirm-email' = 'Confirmação de E-mail',
-  invite = 'Convite de Acesso',
+  confirmation = 'Confirmação de E-mail',
+  invitation = 'Convite de Acesso',
 }
 
 @Injectable()
