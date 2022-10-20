@@ -1,14 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { User, UserStatus } from '@app/entity/user.entity';
-import { SingUpDto } from './auth.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { kryptos } from '@app/utils/crypto';
+
 import { JwtService } from '@nestjs/jwt';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
+
+import { kryptos } from '@app/utils/crypto';
 import { EmailTemplate } from '@app/modules/email/email.service';
-import * as crypto from 'crypto';
+import { User, UserStatus } from '@app/entity/user.entity';
 import { UserToken, UserTokenStatus, UserTokenType } from '@app/entity/user-token.entity';
+
+import { SingUpDto } from './auth.dto';
+
+
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -63,7 +68,12 @@ export class AuthService {
       'email.send',
       user.email,
       EmailTemplate.ConfirmEmail,
-      { token }
+      {
+        token,
+        user_name: user.name,
+        user_email: user.email,
+        confirmation_link: ''
+      },
     );
 
     delete user.password;
