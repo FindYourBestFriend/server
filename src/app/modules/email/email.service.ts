@@ -1,23 +1,25 @@
 import { Injectable } from '@nestjs/common';
-
 import { MailerService } from '@nestjs-modules/mailer';
-import { OnEvent } from '@nestjs/event-emitter';
+
+import handlebars from 'handlebars';
+
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export enum EmailTemplate {
-  ConfirmEmail = 'confirm-email',
-  Invite = 'invite',
+  ConfirmEmail = 'confirmation',
+  Invite = 'invitation',
 }
 
 enum EmailSubject {
-  'confirm-email' = 'Confirmação de E-mail',
-  invite = 'Convite de Acesso',
+  confirmation = 'Confirmação de E-mail',
+  invitation = 'Convite de Acesso',
 }
 
 @Injectable()
 export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  @OnEvent('email.send')
   async send(
     to: string,
     emailTemplate: EmailTemplate,
@@ -25,15 +27,17 @@ export class EmailService {
   ) {
     const from = process.env.SMTP_FROM;
 
-    console.log(from);
-    console.log(to);
+    const html = readFileSync(join(__dirname, `../../../emails/${emailTemplate}.html`), 'utf8');
+    const template = handlebars.compile(html);
+
+    const htmlToSend = template(context);
 
     await this.mailerService.sendMail({
       to,
       from,
-      subject: EmailSubject[emailTemplate],
-      template: emailTemplate,
       context,
+      html: htmlToSend,
+      subject: EmailSubject[emailTemplate],
     });
     return;
   }

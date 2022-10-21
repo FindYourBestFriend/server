@@ -13,7 +13,7 @@ export class AuthController {
     return await this.authService.login(req.user);
   }
 
-  @Post('/singup')
+  @Post('/signup')
   async singup(@Body() body: SingUpDto) {
     return await this.authService.singUp(body);
   }
