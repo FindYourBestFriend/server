@@ -46,7 +46,7 @@ export class AuthService {
     });
 
     if (haveUser) {
-      // throw new BadRequestException('E-mail já cadastrado');
+      throw new BadRequestException('E-mail já cadastrado');
     }
 
     const user = await this.userRepository.save(
