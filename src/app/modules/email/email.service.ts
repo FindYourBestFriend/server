@@ -1,4 +1,3 @@
-import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -21,7 +20,6 @@ enum EmailSubject {
 export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  @OnEvent('email.send')
   async send(
     to: string,
     emailTemplate: EmailTemplate,
@@ -33,9 +31,6 @@ export class EmailService {
     const template = handlebars.compile(html);
 
     const htmlToSend = template(context);
-
-    console.log(from);
-    console.log(to);
 
     await this.mailerService.sendMail({
       to,
