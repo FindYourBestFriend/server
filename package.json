@@ -23,6 +23,7 @@
     "typeorm:run": "npm run typeorm -- -d ./src/app.datasource.ts migration:run"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
@@ -96,7 +97,8 @@
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/app/$1",
       "^@modules/(.*)$": "<rootDir>/app/modules/$1",
-      "^@entity/(.*)$": "<rootDir>/app/entity/$1"
+      "^@entity/(.*)$": "<rootDir>/app/entity/$1",
+      "^@mocks/(.*)$": "<rootDir>/../__mocks__/$1"
     },
     "globals": {
       "ts-jest": {

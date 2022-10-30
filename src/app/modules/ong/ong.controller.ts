@@ -20,7 +20,6 @@ import {
 } from '@app/modules/ong/ong.dto';
 import { OngService } from '@app/modules/ong/ong.service';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '@app/entity/user.entity';
 
 @UseGuards(AuthGuard('ong-jwt'))
 @Controller('v1/ong')
@@ -46,7 +45,7 @@ export class OngController {
   @Post('/add-user')
   @HttpCode(HttpStatus.CREATED)
   async addUser(@Body() body: SaveUserOngDto) {
-    return await this.ongService.addUser(new User({ ...body }));
+    return await this.ongService.addUser(body);
   }
 
   @Post(':orgId/remove-user/:userId')

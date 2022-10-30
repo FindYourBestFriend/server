@@ -13,9 +13,4 @@ export class ONG extends CustomBaseEntity {
   @ManyToMany(() => User, (user) => user.ongs)
   @JoinTable()
   users: User[];
-
-  constructor(ong?: Partial<ONG>) {
-    super();
-    this.name = ong?.name;
-  }
 }

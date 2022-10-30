@@ -54,11 +54,4 @@ export class User extends CustomBaseEntity {
       this.password = kryptos.encrypt(this.password);
     }
   }
-
-  constructor(user?: Partial<User>) {
-    super();
-    this.name = user?.name;
-    this.email = user?.email;
-    this.status = user?.status;
-  }
 }

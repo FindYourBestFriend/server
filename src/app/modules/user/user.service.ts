@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { UpdateUserDto } from '@modules/user/user.dto';
+import { SaveUserDto, UpdateUserDto } from '@modules/user/user.dto';
 import { EmailTemplate } from '../email/email.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
@@ -38,24 +38,24 @@ export class UserService {
     return user;
   }
 
-  async save(user: User): Promise<User> {
+  async save(user: SaveUserDto): Promise<User> {
     const userExist = await this.findOne({ email: user.email });
 
     if (userExist) {
       throw new BadRequestException('Usuário já cadastrado');
     }
 
-    await this.userRepository.save(this.userRepository.create(user));
+    const savedUser = await this.userRepository.save(this.userRepository.create(user));
 
-    this.eventEmmiter.emit('email.send', user.email, EmailTemplate.Invite, {
-      user_name: user.name,
+    this.eventEmmiter.emit('email.send', savedUser.email, EmailTemplate.Invite, {
+      user_name: savedUser.name,
       ong_name: 'Patudos da Rua',
       link: 'http://test.com',
     });
 
     return await this.userRepository.findOne({
       where: {
-        id: user.id,
+        id: savedUser.id,
       },
     });
   }

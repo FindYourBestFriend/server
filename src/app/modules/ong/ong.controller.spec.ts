@@ -1,15 +1,9 @@
-import { ONG } from '@app/entity/ongs.entity';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Request } from 'express';
 import { OngController } from './ong.controller';
 import { OngService } from './ong.service';
+import { ongMock } from '@mocks/ong.mock';
 
-const ongList: ONG[] = [
-  new ONG({ name: 'ONG 1' }),
-  new ONG({ name: 'ONG 2' }),
-  new ONG({ name: 'ONG 3' }),
-  new ONG({ name: 'ONG 4' }),
-];
+const ongList = ongMock.listOfOngs;
 
 const req = {
   headers: {
@@ -62,7 +56,7 @@ describe('OngController', () => {
 
   describe('save', () => {
     it('should save a new ong successfully', async () => {
-      const body = new ONG({ name: 'test' });
+      const body = ongMock.ong;
       const result = await ongController.save(body);
       expect(result).toBe(ongList[0]);
       expect(ongService.save).toBeCalledTimes(1);
@@ -72,7 +66,7 @@ describe('OngController', () => {
 
   describe('update', () => {
     it('should update a ong successfully', async () => {
-      const body = new ONG({ name: 'Test' });
+      const body = ongMock.ong;
       const result = await ongController.update('1', body);
       expect(result).toBe(ongList[0]);
       expect(ongService.update).toBeCalledTimes(1);

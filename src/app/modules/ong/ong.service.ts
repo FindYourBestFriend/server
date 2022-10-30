@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { UserService } from '@app/modules/user/user.service';
-import { SaveOngDto, UpdateOngDto } from '@app/modules/ong/ong.dto';
+import { SaveOngDto, SaveUserOngDto, UpdateOngDto } from '@app/modules/ong/ong.dto';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { User } from '@app/entity/user.entity';
@@ -53,15 +53,11 @@ export class OngService {
     return ong;
   }
 
-  async addUser(user: User): Promise<void> {
+  async addUser(body: SaveUserOngDto): Promise<void> {
     const ongId = this.request.headers['org-id'] as string;
-    const haveUser = await this.userService.findOne({ email: user.email });
+    const haveUser = await this.userService.findOne({ email: body.email });
 
-    if (!haveUser) {
-      user = await this.userService.save(user);
-    } else {
-      user = haveUser;
-    }
+    const user = haveUser || (await this.userService.save(body));
 
     const ong = await this.ongRepository.findOne({
       where: {

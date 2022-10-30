@@ -15,7 +15,8 @@
     "paths": {
       "@app/*": ["src/app/*"],
       "@modules/*": ["src/app/modules/*"],
-      "@entity/*": ["src/app/entity/*"]
+      "@entity/*": ["src/app/entity/*"],
+      "@mocks/*": ["__mocks__/*"]
     }
   }
 }

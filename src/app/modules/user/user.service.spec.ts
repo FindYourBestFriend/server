@@ -6,18 +6,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
+import { userMock } from '@mocks/user.mock';
 
-const userList: User[] = [
-  new User({ email: 'gabriel.back@gmail.com', name: 'Gabriel Back' }),
-  new User({ email: 'gabriel.oliveira@gmail.com', name: 'Gabriel Oliveira' }),
-  new User({ email: 'gabriel.bini@gmail.com', name: 'Gabriel Bini' }),
-  new User({ email: 'gabriel.machado@gmail.com', name: 'Gabriel Machado' }),
-];
-
-const updatedUser = new User({
-  email: 'gabrielback@gmail.com',
-  name: 'Gabriel Back',
-});
+const listOfUsers = userMock.listOfUsers;
+const user = userMock.user;
 
 describe('UserService', () => {
   let userService: UserService;
@@ -30,11 +22,11 @@ describe('UserService', () => {
         {
           provide: getRepositoryToken(User),
           useValue: {
-            find: jest.fn().mockResolvedValue(userList),
-            findOne: jest.fn().mockResolvedValue(userList[0]),
-            create: jest.fn().mockReturnValue(userList[0]),
-            merge: jest.fn().mockReturnValue(updatedUser),
-            save: jest.fn().mockResolvedValue(userList[0]),
+            find: jest.fn().mockResolvedValue(listOfUsers),
+            findOne: jest.fn().mockResolvedValue(user),
+            create: jest.fn().mockReturnValue(user),
+            merge: jest.fn().mockReturnValue(user),
+            save: jest.fn().mockResolvedValue(user),
             softDelete: jest.fn().mockReturnValue(undefined),
           },
         },
@@ -55,7 +47,7 @@ describe('UserService', () => {
     it('should return an user list successfully', async () => {
       const result = await userService.find();
 
-      expect(result).toEqual(userList);
+      expect(result).toEqual(listOfUsers);
       expect(userRepository.find).toHaveBeenCalledTimes(1);
     });
   });
@@ -64,7 +56,7 @@ describe('UserService', () => {
     it('should return an user successfully', async () => {
       const result = await userService.findOne({ id: '1' });
 
-      expect(result).toEqual(userList[0]);
+      expect(result).toEqual(user);
       expect(userRepository.findOne).toHaveBeenCalledTimes(1);
     });
   });
@@ -73,7 +65,7 @@ describe('UserService', () => {
     it('should return an user successfully', async () => {
       const result = await userService.findOneOrFail('1');
 
-      expect(result).toEqual(userList[0]);
+      expect(result).toEqual(user);
       expect(userRepository.findOne).toHaveBeenCalledTimes(1);
     });
 
@@ -93,22 +85,16 @@ describe('UserService', () => {
     it('should create a new user successfully', async () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
 
-      const data: User = new User({
-        email: 'gabriel.back@gmail.com',
-        name: 'Gabriel Back',
-      });
+      const data = user;
       const result = await userService.save(data);
 
-      expect(result).toEqual(userList[0]);
+      expect(result).toEqual(user);
       expect(userRepository.create).toHaveBeenCalledTimes(1);
       expect(userRepository.save).toHaveBeenCalledTimes(1);
     });
 
     it('should throw a bad request exception to an exist user', async () => {
-      const data: User = new User({
-        email: 'gabriel.back@gmail.com',
-        name: 'Gabriel Back',
-      });
+      const data = user;
 
       try {
         await userService.save(data);
@@ -121,14 +107,14 @@ describe('UserService', () => {
 
   describe('update', () => {
     it('should update a user successfully', async () => {
-      jest.spyOn(userRepository, 'save').mockResolvedValueOnce(updatedUser);
+      jest.spyOn(userRepository, 'save').mockResolvedValueOnce(user);
 
       const data: UpdateUserDto = {
         name: 'Gabriel Back',
       };
       const result = await userService.update('1', data);
 
-      expect(result).toBe(updatedUser);
+      expect(result).toBe(user);
       expect(userRepository.findOne).toHaveBeenCalledTimes(1);
       expect(userRepository.save).toHaveBeenCalledTimes(1);
       expect(userRepository.merge).toHaveBeenCalledTimes(1);

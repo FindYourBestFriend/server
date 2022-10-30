@@ -1,21 +1,16 @@
 import { ONG } from '@app/entity/ongs.entity';
-import { User } from '@app/entity/user.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserService } from '../user/user.service';
 import { OngService } from './ong.service';
+import { userMock } from '@mocks/user.mock';
+import { ongMock } from '@mocks/ong.mock';
 
-const ongList: ONG[] = [
-  new ONG({ name: 'ONG 01' }),
-  new ONG({ name: 'ONG 02' }),
-  new ONG({ name: 'ONG 03' }),
-];
+const ongList = ongMock.listOfOngs;
 
-const user = new User({ name: 'Gabriel', email: 'gabriel@gmail.com' });
+const user = userMock.user;
 
-const updatedOng = new ONG({
-  name: 'ONG 001',
-});
+const updatedOng = ongMock.ong;
 
 describe('OngService', () => {
   let service: OngService;
