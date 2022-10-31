@@ -28,7 +28,9 @@ async function bootstrap(): Promise<void> {
   };
 
   const document = SwaggerModule.createDocument(app, config, options);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, { swaggerOptions: {
+    docExpansion: 'none',
+  } });
   await app.listen(port);
 }
 bootstrap();

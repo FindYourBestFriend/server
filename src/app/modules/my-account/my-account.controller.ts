@@ -2,6 +2,7 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { MyAccountService } from '@app/modules/my-account/my-account.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Body, Put } from '@nestjs/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
 export interface IUpdateUser {
   name: string;
@@ -9,6 +10,7 @@ export interface IUpdateUser {
 
 @Controller('v1/my-account')
 @UseGuards(AuthGuard('jwt'))
+@ApiTags('My Account')
 export class MyAccountController {
   constructor(
     private readonly service: MyAccountService,
