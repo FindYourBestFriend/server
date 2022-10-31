@@ -50,7 +50,7 @@ $ npm run test:cov
 
 ## Docs
 
-We have a documentation in Swagger. [read more here](http://findyourbestfriend.social/docs)
+We have a documentation in Swagger. [read more here](http://api.findyourbestfriend.social/docs)
 
 
 ## License
