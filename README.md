@@ -55,4 +55,4 @@ We have a documentation in Swagger. [read more here](http://findyourbestfriend.s
 
 ## License
 
-  FYBF is [MIT licensed](https://github.com/FindYourBestFriend/server/blob/main/LICENSE).
+  FYBF is [MIT licensed](https://github.com/FindYourBestFriend/server/blob/main/LICENSE.md).
