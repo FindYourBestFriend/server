@@ -20,9 +20,11 @@ import {
 } from '@app/modules/ong/ong.dto';
 import { OngService } from '@app/modules/ong/ong.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthGuard('ong-jwt'))
 @Controller('v1/ong')
+@ApiTags('ONG')
 export class OngController {
   constructor(private readonly ongService: OngService) {}
   @Get()
