@@ -27,7 +27,11 @@ export class EmailService {
   ) {
     const from = process.env.SMTP_FROM;
 
-    const html = readFileSync(join(__dirname, `../../../emails/${emailTemplate}.html`), 'utf8');
+    const html = readFileSync(
+      join(__dirname, '../../../../', 'emails', `${emailTemplate}.html`),
+      'utf8',
+    );
+
     const template = handlebars.compile(html);
 
     const htmlToSend = template(context);
@@ -42,3 +46,4 @@ export class EmailService {
     return;
   }
 }
+
