@@ -8,10 +8,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { kryptos } from '@app/utils/crypto';
 import { EmailTemplate } from '@app/modules/email/email.service';
 import { User, UserStatus } from '@app/entity/user.entity';
-import { UserToken, UserTokenStatus, UserTokenType } from '@app/entity/user-token.entity';
+import {
+  UserToken,
+  UserTokenStatus,
+  UserTokenType,
+} from '@app/entity/user-token.entity';
 
 import { SingUpDto } from './auth.dto';
-
 
 import * as crypto from 'crypto';
 
@@ -61,7 +64,7 @@ export class AuthService {
     userToken.type = UserTokenType.EmailConfirmation;
 
     await this.userTokenRepository.save(
-      this.userTokenRepository.create(userToken)
+      this.userTokenRepository.create(userToken),
     );
 
     this.eventEmitter.emit(
@@ -69,10 +72,9 @@ export class AuthService {
       user.email,
       EmailTemplate.ConfirmEmail,
       {
-        token,
         user_name: user.name,
         user_email: user.email,
-        confirmation_link: ''
+        confirmation_link: `${process.env.CLIENT_URL}/auth/confirm?token=${token}`,
       },
     );
 
@@ -176,3 +178,4 @@ export class AuthService {
     return user;
   }
 }
+
