@@ -50,7 +50,7 @@ export class UserService {
     this.eventEmmiter.emit('email.send', savedUser.email, EmailTemplate.Invite, {
       user_name: savedUser.name,
       ong_name: 'Patudos da Rua',
-      link: 'http://test.com',
+      link: process.env.CLIENT_URL,
     });
 
     return await this.userRepository.findOne({

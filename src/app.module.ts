@@ -8,6 +8,7 @@ import { EmailModule } from './app/modules/email/email.module';
 import { AppController } from './app.controller';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MyAccountModule } from './app/modules/my-account/my-account.module';
+import { AnimalModule } from './app/modules/animal/animal.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MyAccountModule } from './app/modules/my-account/my-account.module';
     OngModule,
     EmailModule,
     MyAccountModule,
+    AnimalModule,
   ],
   controllers: [AppController],
 })
