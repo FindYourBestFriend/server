@@ -11,7 +11,6 @@ import { UserService } from '@app/modules/user/user.service';
 import { SaveOngDto, SaveUserOngDto, UpdateOngDto } from '@app/modules/ong/ong.dto';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
-import { User } from '@app/entity/user.entity';
 
 @Injectable()
 export class OngService {
