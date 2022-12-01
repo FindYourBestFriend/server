@@ -16,4 +16,9 @@ export class PublicController {
   async findOneAnimal(@Param('id') id: string) {
     return this.publicService.findOneAnimal(id);
   }
+
+  @Get('locations')
+  async findLocations() {
+    return this.publicService.findLocations();
+  }
 }
