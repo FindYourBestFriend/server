@@ -9,6 +9,8 @@ import { AppController } from './app.controller';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MyAccountModule } from './app/modules/my-account/my-account.module';
 import { AnimalModule } from './app/modules/animal/animal.module';
+import { LocationModule } from './app/modules/location/location.module';
+import { PublicModule } from './app/modules/public/public.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { AnimalModule } from './app/modules/animal/animal.module';
     EmailModule,
     MyAccountModule,
     AnimalModule,
+    LocationModule,
+    PublicModule,
   ],
   controllers: [AppController],
 })

@@ -6,7 +6,7 @@ import { SaveAnimalDto, UpdateAnimalDto } from '@app/modules/animal/animal.dto';
 import { AnimalService } from '@app/modules/animal/animal.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('animal')
+@Controller('v1/animal')
 @UseGuards(AuthGuard('jwt'))
 export class AnimalController {
   constructor(

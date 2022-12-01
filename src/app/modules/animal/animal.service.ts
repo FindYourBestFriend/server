@@ -28,7 +28,8 @@ export class AnimalService {
         creator: {
           id: creatorId,
         }
-      }
+      },
+      relations: ['locations'],
     });
   }
 
