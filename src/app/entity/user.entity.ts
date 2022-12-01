@@ -7,11 +7,12 @@ import {
   OneToMany,
   Index,
 } from 'typeorm';
-import { CustomBaseEntity } from '@entity/base';
+import { CustomBaseEntity } from '@app/entity/base';
 import { kryptos } from '@app/utils/crypto';
-import { ONG } from '@entity/ongs.entity';
-import { UserToken } from '@entity/user-token.entity';
-import { Animal } from './animal.entity';
+import { ONG } from '@app/entity/ongs.entity';
+import { UserToken } from '@app/entity/user-token.entity';
+import { Animal } from '@app/entity/animal.entity';
+import { Location } from '@app/entity/location.entity';
 
 export enum UserStatus {
   Created = 'created', // Criado
@@ -50,7 +51,10 @@ export class User extends CustomBaseEntity {
   ongs: ONG[];
 
   @OneToMany(() => Animal, animal => animal.creator)
-  animals: Animal[]
+  animals: Animal[];
+
+  @OneToMany(() => Location, location => location.creator)
+  locations: Location[];
 
   @BeforeInsert()
   hashPassword(): void {

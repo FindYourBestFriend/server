@@ -1,7 +1,7 @@
 import { IsString, MaxLength } from 'class-validator';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
-import { User } from '@entity/user.entity';
-import { CustomBaseEntity } from '@entity/base';
+import { User } from '@app/entity/user.entity';
+import { CustomBaseEntity } from '@app/entity/base';
 
 export enum UserTokenStatus {
   Expired = 'expired',
