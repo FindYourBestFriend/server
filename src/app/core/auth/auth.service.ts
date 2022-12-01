@@ -53,7 +53,7 @@ export class AuthService {
     }
 
     const user = await this.userRepository.save(
-      this.userRepository.create({ ...body, status: UserStatus.Created }),
+      this.userRepository.create({ ...body, status: UserStatus.Confirmed }),
     );
 
     const token = crypto.randomBytes(10).toString('hex');
@@ -67,16 +67,16 @@ export class AuthService {
       this.userTokenRepository.create(userToken),
     );
 
-    this.eventEmitter.emit(
-      'email.send',
-      user.email,
-      EmailTemplate.ConfirmEmail,
-      {
-        user_name: user.name,
-        user_email: user.email,
-        confirmation_link: `${process.env.CLIENT_URL}/auth/confirm?token=${token}`,
-      },
-    );
+    // this.eventEmitter.emit(
+    //   'email.send',
+    //   user.email,
+    //   EmailTemplate.ConfirmEmail,
+    //   {
+    //     user_name: user.name,
+    //     user_email: user.email,
+    //     confirmation_link: `${process.env.CLIENT_URL}/auth/confirm?token=${token}`,
+    //   },
+    // );
 
     delete user.password;
 
