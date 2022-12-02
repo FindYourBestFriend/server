@@ -10,12 +10,16 @@ export enum LocationType {
 
 @Entity()
 export class Location extends CustomBaseEntity {
-
   @Column('enum', {
     enum: LocationType,
   })
   @IsEnum(LocationType)
   type: LocationType;
+
+  @Column({ nullable: true })
+  @IsString()
+  @IsOptional()
+  typeNote: string;
 
   @Column({ nullable: true })
   @IsString()
@@ -31,10 +35,10 @@ export class Location extends CustomBaseEntity {
   @IsOptional()
   images: string[];
 
-  @ManyToOne(() => User, user => user.locations)
+  @ManyToOne(() => User, (user) => user.locations)
   creator: User;
-  
-  @ManyToOne(() => Animal, animal => animal.locations)
+
+  @ManyToOne(() => Animal, (animal) => animal.locations)
   animal: Animal;
-  
 }
+

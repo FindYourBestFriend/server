@@ -1,6 +1,13 @@
 import { Animal } from '@app/entity/animal.entity';
 import { LocationType } from '@app/entity/location.entity';
-import { IsString, IsNotEmpty, IsEnum, IsOptional, IsArray } from 'class-validator';
+import { User } from '@app/entity/user.entity';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEnum,
+  IsOptional,
+  IsArray,
+} from 'class-validator';
 
 export class SaveLocationDto {
   @IsString()
@@ -24,6 +31,9 @@ export class SaveLocationDto {
   @IsArray()
   @IsOptional()
   images: string[];
+
+  @IsNotEmpty()
+  creator: User;
 }
 
 export class UpdateLocationDto extends SaveLocationDto {}

@@ -1,7 +1,15 @@
 import { ValidationUUIDPipe } from '@app/core/pipe/uuid-validation.pipe';
 import { Animal } from '@app/entity/animal.entity';
 import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
-import { Body, Delete, HttpCode, Post, Put, Req, UseGuards } from '@nestjs/common/decorators';
+import {
+  Body,
+  Delete,
+  HttpCode,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common/decorators';
 import { SaveAnimalDto, UpdateAnimalDto } from '@app/modules/animal/animal.dto';
 import { AnimalService } from '@app/modules/animal/animal.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -9,10 +17,8 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('v1/animal')
 @UseGuards(AuthGuard('jwt'))
 export class AnimalController {
-  constructor(
-    private readonly animalService: AnimalService,
-  ) {}
-  
+  constructor(private readonly animalService: AnimalService) {}
+
   @Get()
   async findAll(@Req() req) {
     const currentUserId = req.user.id;
@@ -25,7 +31,7 @@ export class AnimalController {
     return await this.animalService.findOne(id, currentUserId);
   }
 
-  @Post(':id')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   async save(@Body() body: SaveAnimalDto): Promise<Animal> {
     return await this.animalService.save(body);
@@ -45,3 +51,4 @@ export class AnimalController {
     await this.animalService.deleteById(id);
   }
 }
+

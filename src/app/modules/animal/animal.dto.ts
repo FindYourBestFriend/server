@@ -1,9 +1,17 @@
 import { AnimalType } from '@app/entity/animal.entity';
-import { IsString, IsNotEmpty, IsEnum, IsOptional, IsArray } from 'class-validator';
+import { User } from '@app/entity/user.entity';
+
+import {
+  IsString,
+  IsNotEmpty,
+  IsEnum,
+  IsOptional,
+  IsArray,
+} from 'class-validator';
 
 export class SaveAnimalDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @IsEnum(AnimalType)
@@ -20,6 +28,10 @@ export class SaveAnimalDto {
   @IsArray()
   @IsOptional()
   images: string[];
+
+  @IsNotEmpty()
+  creator: User;
 }
 
 export class UpdateAnimalDto extends SaveAnimalDto {}
+

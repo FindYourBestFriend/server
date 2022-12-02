@@ -12,7 +12,7 @@ export class PublicService {
     @InjectRepository(Location)
     private readonly locationRepository: Repository<Location>,
   ) {}
-  
+
   async findAnimals() {
     return await this.animalRepository.find();
   }
@@ -27,6 +27,9 @@ export class PublicService {
   }
 
   async findLocations() {
-    return await this.locationRepository.find();
+    return await this.locationRepository.find({
+      relations: ['animal'],
+    });
   }
 }
+

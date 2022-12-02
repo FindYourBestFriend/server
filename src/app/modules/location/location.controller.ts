@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { SaveLocationDto, UpdateLocationDto } from './location.dto';
 import { Location } from '@app/entity/location.entity';
@@ -8,11 +20,21 @@ import { ValidationUUIDPipe } from '@app/core/pipe/uuid-validation.pipe';
 @Controller('v1/location')
 @UseGuards(AuthGuard('jwt'))
 export class LocationController {
-  constructor(
-    private readonly locationService: LocationService,
-  ) {}
+  constructor(private readonly locationService: LocationService) {}
 
-  @Post(':id')
+  @Get()
+  async findAll(@Req() req) {
+    const currentUserId = req.user.id;
+    return await this.locationService.findAll(currentUserId);
+  }
+
+  @Get(':id')
+  async findById(@Req() req, @Param('id', ValidationUUIDPipe) id: string) {
+    const currentUserId = req.user.id;
+    return await this.locationService.findOne(id, currentUserId);
+  }
+
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   async save(@Body() body: SaveLocationDto): Promise<Location> {
     return await this.locationService.save(body);
@@ -32,3 +54,4 @@ export class LocationController {
     await this.locationService.deleteById(id);
   }
 }
+

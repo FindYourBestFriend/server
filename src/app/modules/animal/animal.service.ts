@@ -16,8 +16,8 @@ export class AnimalService {
       where: {
         creator: {
           id: creatorId,
-        }
-      }
+        },
+      },
     });
   }
 
@@ -27,7 +27,7 @@ export class AnimalService {
         id,
         creator: {
           id: creatorId,
-        }
+        },
       },
       relations: ['locations'],
     });
@@ -57,3 +57,4 @@ export class AnimalService {
     await this.animalRepository.softDelete({ id });
   }
 }
+
